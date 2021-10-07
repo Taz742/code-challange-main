@@ -20,6 +20,7 @@ export default class DocumentsStore {
   }
 
   async delete(id: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const documentDeleteResponse = await documentsService.delete(id);
     this.list = this.list.filter((document) => document.id !== id);
   }
