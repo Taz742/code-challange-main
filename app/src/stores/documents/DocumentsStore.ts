@@ -7,15 +7,6 @@ export default class DocumentsStore {
 
   constructor() {
     makeObservable(this);
-    // this.list.push({
-    //   id: "1",
-    //   title: "One",
-    //   body: "Description One",
-    // });
-    // this.create({
-    //   title: "One",
-    //   body: "Description One",
-    // });
   }
 
   async create(document: Omit<IDocument, "id">) {
@@ -26,5 +17,10 @@ export default class DocumentsStore {
   async getList() {
     const documentsListResponse = await documentsService.getList();
     this.list = documentsListResponse.data;
+  }
+
+  async delete(id: string) {
+    const documentDeleteResponse = await documentsService.delete(id);
+    this.list = this.list.filter((document) => document.id !== id);
   }
 }

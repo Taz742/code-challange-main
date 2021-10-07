@@ -16,4 +16,11 @@ export const documentsService = {
     })
       .then((response) => response.json())
   },
+  delete: async (id: string) => {
+    return fetch(`http://localhost:3001/v1/documents/${id}`, {
+      method: "delete",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => response.json())
+  },
 };

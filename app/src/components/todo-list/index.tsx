@@ -28,9 +28,10 @@ const DocumentsList = () => {
     setOpen(!open);
   };
 
-  const handleDelete = (e: React.MouseEvent<any>) => {
+  const handleDelete = (id: string) => (e: React.MouseEvent<any>) => {
     e.stopPropagation();
-    console.log("delete");
+    
+    documentsStore.delete(id);
   };
 
   return (
@@ -44,15 +45,19 @@ const DocumentsList = () => {
         </ListSubheader>
       }
     >
-      <ListItemButton onClick={handleClick}>
-        <ListItemIcon>
-          <InboxIcon />
-        </ListItemIcon>
-        <ListItemText primary="Inbox" />
-        <ListItemIcon onClick={handleDelete}>
-          <DeleteIcon />
-        </ListItemIcon>
-      </ListItemButton>
+      {documentsStore.list.map((document) => {
+        return (
+          <ListItemButton onClick={handleClick}>
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText primary={document.title} />
+            <ListItemIcon onClick={handleDelete(document.id)}>
+              <DeleteIcon />
+            </ListItemIcon>
+          </ListItemButton>
+        );
+      })}
     </List>
   );
 };
