@@ -1,3 +1,4 @@
+import DocumentsStore from "./documents/DocumentsStore";
 import UIStore from "./UIStore";
 
 export interface IRootStore {
@@ -6,9 +7,11 @@ export interface IRootStore {
 
 export default class RootStore implements IRootStore {
   ui: UIStore;
+  documentsStore: DocumentsStore;
 
   constructor() {
     this.ui = new UIStore();
+    this.documentsStore = new DocumentsStore();
   }
 
   get stores() {
