@@ -31,3 +31,6 @@ redis==3.5.3
 requests==2.25.1
 sqlalchemy==1.3.24
 stripe==2.55.1
+
+# cors
+flask-cors

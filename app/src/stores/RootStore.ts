@@ -3,6 +3,7 @@ import UIStore from "./UIStore";
 
 export interface IRootStore {
   ui?: UIStore;
+  documentsStore?: DocumentsStore;
 }
 
 export default class RootStore implements IRootStore {
@@ -16,7 +17,8 @@ export default class RootStore implements IRootStore {
 
   get stores() {
     return {
-      ui: this.ui
+      ui: this.ui,
+      documentsStore: this.documentsStore
     };
   }
 }
