@@ -23,4 +23,11 @@ export default class DocumentsStore {
     const documentDeleteResponse = await documentsService.delete(id);
     this.list = this.list.filter((document) => document.id !== id);
   }
+
+  async update(document: IDocument) {
+    const documentUpdateResponse = await documentsService.update(document);
+    this.list = this.list.map((_document) =>
+      _document.id !== document.id ? _document : documentUpdateResponse.data
+    );
+  }
 }

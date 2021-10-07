@@ -66,7 +66,7 @@ def collection():
     return jsonify({'data': documents}), 200
 
 
-@documents_mod.route('/<string:document_id>', methods=['PATCH'])
+@documents_mod.route('/<string:document_id>', methods=['PUT'])
 def update(document_id):
     document = PgDocument.query.get(document_id)
     if not document:
