@@ -17,16 +17,32 @@ import DocumentsStore from "../../stores/documents/DocumentsStore";
 import { IDocument } from "../../stores/documents/interfaces";
 
 import Editor from "rich-markdown-editor";
+import { Typography } from "@mui/material";
 
-interface IProps {
-  onDocumentClick: (document: IDocument) => void;
-}
+import { makeStyles } from "@mui/styles";
+import { IDocumentsListProps } from "./interfaces";
 
-const DocumentsList = ({ onDocumentClick }: IProps) => {
+const useStyles = makeStyles({
+  detailsContainer: {
+    display: "flex",
+    flexDirection: "column",
+    padding: 20
+  },
+  detailsContent: {
+    marginTop: 20,
+    padding: '10px 20px',
+    borderRadius: 10,
+    border: "1px solid rgba(0, 0, 0, 0.23)",
+  },
+});
+
+const DocumentsList = ({ onDocumentClick }: IDocumentsListProps) => {
   const [activeDocument, setActiveDocument] = useState<IDocument | null>(null);
 
   const stores = useStores();
   const documentsStore = stores.documentsStore as Required<DocumentsStore>;
+
+  const styles = useStyles();
 
   useEffect(() => {
     documentsStore.getList();
@@ -82,7 +98,12 @@ const DocumentsList = ({ onDocumentClick }: IProps) => {
           );
         })}
       </List>
-      {activeDocument && <Editor readOnly value={activeDocument.body} />}
+      {activeDocument && (
+        <div className={styles.detailsContainer}>
+          <Typography variant="h4">{`${activeDocument.title} - Details`}</Typography>
+          <Editor className={styles.detailsContent} readOnly value={activeDocument.body} />
+        </div>
+      )}
     </>
   );
 };

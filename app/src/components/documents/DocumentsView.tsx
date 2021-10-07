@@ -16,7 +16,7 @@ export const DocumentsView = () => {
   return (
     <>
       <Button onClick={() => openCreateOrUpdateDocumentModal()}>
-        Create Document
+        Create New Document
       </Button>
       <DocumentsList
         onDocumentClick={(document) =>

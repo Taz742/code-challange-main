@@ -4,14 +4,11 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 
 import Editor from "rich-markdown-editor";
-
-import { IDocument } from "../../stores/documents/interfaces";
 
 import FormInput from "../../shared/form/form-input";
 
@@ -19,26 +16,29 @@ import useStores from "../../hooks/useStores";
 
 import DocumentsStore from "../../stores/documents/DocumentsStore";
 
-interface IFormInput {
-  title: string;
-  body: string;
-}
+import { makeStyles } from "@mui/styles";
+import { IFormInput, ICreateOrUpdateDocumentModalProps } from "./interfaces";
 
-interface IProps {
-  isOpen: boolean;
-  document?: IDocument;
-  handleClose: () => void;
-}
+const useStyles = makeStyles({
+  detailsContent: {
+    padding: "20px 50px",
+    marginTop: 20,
+    height: 200,
+    overflowY: "scroll",
+    border: "1px solid rgba(0, 0, 0, 0.23)",
+    borderRadius: 4,
+  },
+});
 
 const CreateOrUpdateDocumentModal = ({
   isOpen,
   document,
   handleClose,
-}: IProps) => {
+}: ICreateOrUpdateDocumentModalProps) => {
   const stores = useStores();
   const documentsStore = stores.documentsStore as Required<DocumentsStore>;
 
-  console.log("doc is: ", document);
+  const styles = useStyles();
 
   const methods = useForm<IFormInput>({
     defaultValues: {
@@ -74,36 +74,24 @@ const CreateOrUpdateDocumentModal = ({
           {document ? `Edit ${document.title} - Document` : "Create Document"}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            <FormProvider {...methods}>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <FormInput
-                  name="title"
-                  label="Title"
-                  validate={{ required: true }}
-                />
-                <div
-                  style={{
-                    padding: "20px 50px",
-                    marginTop: 20,
-                    height: 200,
-                    overflowY: "scroll",
-                    border: "1px solid rgba(0, 0, 0, 0.23)",
-                    borderRadius: 4,
-                  }}
-                >
-                  <Editor
-                    key="body-input"
-                    value={body}
-                    onChange={(getContent) => {
-                      const content = getContent();
-                      setValue("body", content);
-                    }}
-                  />
-                </div>
-              </form>
-            </FormProvider>
-          </DialogContentText>
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <FormInput
+                name="title"
+                label="Title"
+                validate={{ required: true }}
+              />
+              <Editor
+                id="body-input"
+                className={styles.detailsContent}
+                value={body}
+                onChange={(getContent) => {
+                  const content = getContent();
+                  setValue("body", content);
+                }}
+              />
+            </form>
+          </FormProvider>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>
