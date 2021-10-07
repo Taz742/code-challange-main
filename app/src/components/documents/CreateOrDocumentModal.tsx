@@ -27,6 +27,7 @@ const useStyles = makeStyles({
     overflowY: "scroll",
     border: "1px solid rgba(0, 0, 0, 0.23)",
     borderRadius: 4,
+    justifyContent: 'flex-start !important'
   },
 });
 
@@ -84,7 +85,7 @@ const CreateOrUpdateDocumentModal = ({
               <Editor
                 id="body-input"
                 className={styles.detailsContent}
-                value={body}
+                defaultValue={""}
                 onChange={(getContent) => {
                   const content = getContent();
                   setValue("body", content);
