@@ -38,7 +38,6 @@ const useModal = <T extends any>(
       setError,
       closeModal,
       openModal,
-      // @ts-ignore
       item,
     };
   }, [
@@ -51,7 +50,6 @@ const useModal = <T extends any>(
     setError,
     closeModal,
     openModal,
-    // @ts-ignore
     item,
   ]);
 

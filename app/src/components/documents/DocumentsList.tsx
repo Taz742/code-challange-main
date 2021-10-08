@@ -2,14 +2,9 @@ import React, { useState, useEffect } from "react";
 
 import { observer } from "mobx-react";
 
-import ListSubheader from "@mui/material/ListSubheader";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 import useStores from "../../hooks/useStores";
 
@@ -17,27 +12,46 @@ import DocumentsStore from "../../stores/documents/DocumentsStore";
 import { IDocument } from "../../stores/documents/interfaces";
 
 import Editor from "rich-markdown-editor";
-import { Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Typography,
+} from "@mui/material";
 
 import { makeStyles } from "@mui/styles";
-import { IDocumentsListProps } from "./interfaces";
+import { IDocumentsListProps, Order, SortKeys } from "./interfaces";
+import { TableHeader } from "./DocumentsListHeader";
 
 const useStyles = makeStyles({
-  detailsContainer: {
-    display: "flex",
-    flexDirection: "column",
-    padding: 20
+  container: {
+    width: "100%",
+    height: "100%",
+    marginTop: "60px !important",
   },
-  detailsContent: {
-    marginTop: 20,
-    padding: '10px 20px',
-    borderRadius: 10,
-    border: "1px solid rgba(0, 0, 0, 0.23)",
+  addDocument: {
+    color: "#305ECA",
+    fontSize: 72,
+    position: "absolute",
+    top: 180,
+    cursor: "pointer",
+    background: "#fff",
+    borderRadius: "50%",
   },
 });
 
-const DocumentsList = ({ onDocumentClick }: IDocumentsListProps) => {
+const DocumentsList = ({
+  onDocumentClick,
+  onCreateDocument,
+}: IDocumentsListProps) => {
   const [activeDocument, setActiveDocument] = useState<IDocument | null>(null);
+
+  const [order, setOrder] = useState<Order>("asc");
+  const [orderBy, setOrderBy] = useState<SortKeys>("title");
 
   const stores = useStores();
   const documentsStore = stores.documentsStore as Required<DocumentsStore>;
@@ -45,8 +59,17 @@ const DocumentsList = ({ onDocumentClick }: IDocumentsListProps) => {
   const styles = useStyles();
 
   useEffect(() => {
-    documentsStore.getList();
-  }, [documentsStore]);
+    documentsStore.getList(order, orderBy);
+  }, [documentsStore, order, orderBy]);
+
+  const handleRequestSort = (
+    event: React.MouseEvent<unknown>,
+    property: SortKeys
+  ) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
 
   const handleEditDocument = (document: IDocument) => {
     onDocumentClick(document);
@@ -67,44 +90,47 @@ const DocumentsList = ({ onDocumentClick }: IDocumentsListProps) => {
   };
 
   return (
-    <>
-      <List
-        sx={{ width: "100%", bgcolor: "background.paper" }}
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-        subheader={
-          <ListSubheader component="div" id="nested-list-subheader">
-            Document List Items
-          </ListSubheader>
-        }
-      >
-        {documentsStore.list.map((document) => {
-          return (
-            <ListItemButton
-              onClick={() => handleShowDetails(document)}
-              key={document.id}
-            >
-              <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon>
-              <ListItemText primary={document.title} />
-              <ListItemIcon onClick={() => handleEditDocument(document)}>
-                <EditIcon />
-              </ListItemIcon>
-              <ListItemIcon onClick={handleDelete(document.id)}>
-                <DeleteIcon />
-              </ListItemIcon>
-            </ListItemButton>
-          );
-        })}
-      </List>
-      {activeDocument && (
-        <div className={styles.detailsContainer}>
-          <Typography variant="h4">{`${activeDocument.title} - Details`}</Typography>
-          <Editor className={styles.detailsContent} readOnly value={activeDocument.body} />
-        </div>
-      )}
-    </>
+    <Box className={styles.container}>
+      <Container>
+        <AddCircleIcon
+          className={styles.addDocument}
+          onClick={() => onCreateDocument()}
+        />
+        <TableContainer>
+          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+            <TableHeader
+              order={order}
+              orderBy={orderBy}
+              onRequestSort={handleRequestSort as any}
+            />
+            <TableBody>
+              {documentsStore.list.map((row, index) => {
+                return (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                    <TableCell align="left">
+                      <Typography>{row.title}</Typography>
+                    </TableCell>
+                    <TableCell align="left">
+                      <Typography>{row.updated_at}</Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <EditIcon
+                        onClick={() => handleEditDocument(row)}
+                        sx={{ cursor: "pointer" }}
+                      />
+                      <DeleteIcon
+                        onClick={handleDelete(row.id)}
+                        sx={{ cursor: "pointer", marginLeft: 5 }}
+                      />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Container>
+    </Box>
   );
 };
 

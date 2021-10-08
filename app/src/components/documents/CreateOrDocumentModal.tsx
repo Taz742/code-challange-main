@@ -48,9 +48,7 @@ const CreateOrUpdateDocumentModal = ({
     },
   });
 
-  const { setValue, watch, handleSubmit } = methods;
-
-  const body = watch("body");
+  const { setValue, handleSubmit } = methods;
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     if (document) {

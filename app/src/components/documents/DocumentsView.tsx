@@ -4,6 +4,7 @@ import useModal from "../../hooks/useModal";
 import { IDocument } from "../../stores/documents/interfaces";
 import CreateOrUpdateDocumentModal from "./CreateOrDocumentModal";
 import DocumentsList from "./DocumentsList";
+import { DocumentsAppBar } from "../app-bar";
 
 export const DocumentsView = () => {
   const {
@@ -13,15 +14,14 @@ export const DocumentsView = () => {
     closeModal: closeCreateOrUpdateDocumentModal,
   } = useModal<IDocument | undefined>();
 
+  const redirect = (id?: string) => {};
+
   return (
     <>
-      <Button onClick={() => openCreateOrUpdateDocumentModal()}>
-        Create New Document
-      </Button>
+      <DocumentsAppBar />
       <DocumentsList
-        onDocumentClick={(document) =>
-          openCreateOrUpdateDocumentModal(document)
-        }
+        onCreateDocument={() => redirect()}
+        onDocumentClick={(document) => redirect(document.id)}
       />
       {isCreateOrUpdateDocumentOpen && (
         <CreateOrUpdateDocumentModal

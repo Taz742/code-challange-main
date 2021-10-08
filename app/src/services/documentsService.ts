@@ -1,16 +1,17 @@
+import { Order, SortKeys } from "../components/documents/interfaces";
 import { IDocument } from "../stores/documents/interfaces";
 import { getEnvVariable } from "../utils/env";
 
 export const documentsService = {
-  create: async (document: Omit<IDocument, "id">) => {
+  create: async (document: Omit<IDocument, "id" | "updated_at">) => {
     return fetch(`${getEnvVariable('BASE_API_URL')}/v1/documents`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(document),
     }).then((response) => response.json());
   },
-  getList: async () => {
-    return fetch(`${getEnvVariable('BASE_API_URL')}/v1/documents`, {
+  getList: async (order: Order, orderBy: SortKeys) => {
+    return fetch(`${getEnvVariable('BASE_API_URL')}/v1/documents?sort=${orderBy}&direction=${order}`, {
       method: "get",
       headers: { "Content-Type": "application/json" },
     }).then((response) => response.json());
@@ -21,7 +22,7 @@ export const documentsService = {
       headers: { "Content-Type": "application/json" },
     }).then((response) => response.json());
   },
-  update: async (document: IDocument) => {
+  update: async (document: Partial<IDocument>) => {
     return fetch(`${getEnvVariable('BASE_API_URL')}/v1/documents/${document.id}`, {
       method: "put",
       headers: { "Content-Type": "application/json" },
