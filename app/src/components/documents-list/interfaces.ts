@@ -14,6 +14,7 @@ export interface ICreateOrUpdateDocumentModalProps {
 export interface IDocumentsListProps {
   onCreateDocument: () => void;
   onDocumentClick: (document: IDocument) => void;
+  onRowClick: (document: IDocument) => void;
 }
 
 type SortableColumns = Pick<IDocument, "title" | "updated_at">;

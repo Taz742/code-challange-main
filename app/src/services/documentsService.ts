@@ -1,4 +1,4 @@
-import { Order, SortKeys } from "../components/documents/interfaces";
+import { Order, SortKeys } from "../components/documents-list/interfaces";
 import { IDocument } from "../stores/documents/interfaces";
 import { getEnvVariable } from "../utils/env";
 

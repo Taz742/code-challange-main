@@ -1,5 +1,5 @@
 import { makeObservable, observable } from "mobx";
-import { Order, SortKeys } from "../../components/documents/interfaces";
+import { Order, SortKeys } from "../../components/documents-list/interfaces";
 import { documentsService } from "../../services/documentsService";
 import { IDocument } from "./interfaces";
 
